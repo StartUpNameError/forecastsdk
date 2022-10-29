@@ -9,10 +9,10 @@ RUN useradd --create-home --shell /bin/bash worker
 USER worker
 WORKDIR /home/worker
 
-# Copy `client` python library and its deps.
-COPY --chown=worker:worker . /home/worker/client
+# Copy `forecast_client` python library and its deps.
+COPY --chown=worker:worker . /home/worker/forecast_client
 
 # Install deps and add user bin to PATH
-RUN pip install --user --default-timeout=100 -r client/requirements.txt
+RUN pip install --user --default-timeout=100 -r forecast_client/requirements.txt
 ENV PATH="/home/worker/.local/bin:${PATH}"
 

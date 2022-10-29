@@ -1,4 +1,4 @@
-from client.services.base import BaseService
+from ..base import BaseService
 
 
 class TrainService(BaseService):

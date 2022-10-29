@@ -12,7 +12,7 @@ from source with:
 
 .. code-block:: sh
 
-    $ git clone https://github.com/ramonAV98/forecast_client
+    $ git clone https://github.com/ramonAV98/forecast_client.git
     $ cd forecast_client
     $ python -m pip install -r requirements.txt
     $ python -m pip install -e .

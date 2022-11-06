@@ -3,8 +3,8 @@ from ..base import BaseService
 
 class TrainService(BaseService):
 
-    def __init__(self, endpoint, loader, access_token):
-        super().__init__(endpoint, loader, access_token)
+    def __init__(self, endpoint, loader, access_token, credentials):
+        super().__init__(endpoint, loader, access_token, credentials)
 
     def post(self, task_name, dataset_group_name, dataset_name,
              algorithm, forecast_horizon, freq, perform_hpo=False):

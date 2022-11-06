@@ -10,7 +10,7 @@
     "services" : {
       "train": {
         "defaults": {
-          "hostname": "api:{port}/{service}/{endpoint}{dnsSuffix}"
+          "hostname": "forecastapi:{port}/{service}/{endpoint}{dnsSuffix}"
         },
         "port": "80",
         "endpoints": {}
@@ -24,21 +24,21 @@
       },
       "predict": {
         "defaults" : {
-          "hostname" : "api:{port}/{service}/{endpoint}{dnsSuffix}"
+          "hostname" : "forecastapi:{port}/{service}/{endpoint}{dnsSuffix}"
         },
         "port": "80",
         "endpoints": {}
       },
       "login": {
         "defaults": {
-          "hostname": "api:{port}/{service}{dnsSuffix}"
+          "hostname": "forecastapi:{port}/{service}{dnsSuffix}"
         },
         "port": "80",
         "endpoints": {}
       },
       "authenticator": {
         "defaults": {
-          "hostname" : "api:{port}/users/me"
+          "hostname" : "forecastapi:{port}/users/me"
         },
         "port": 80,
         "endpoints": {}

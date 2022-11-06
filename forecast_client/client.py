@@ -29,12 +29,13 @@ class ClientCreator:
         self._endpoint_resolver = endpoint_resolver
 
     def create_client(self, service_name, endpoint_name, is_secure=True,
-                      endpoint_url=None, access_token=None):
+                      endpoint_url=None, access_token=None, credentials=None):
         endpoint_bridge = ClientEndpointBridge(self._endpoint_resolver)
         cls = self._get_client_class(service_name)
-        client_args = self._get_client_args(service_name, endpoint_name,
-                                            endpoint_bridge, is_secure,
-                                            endpoint_url, access_token)
+        client_args = self._get_client_args(
+            service_name, endpoint_name, endpoint_bridge, is_secure,
+            endpoint_url, access_token, credentials
+        )
         service_client = cls(**client_args)
         return service_client
 
@@ -44,11 +45,11 @@ class ClientCreator:
         return SERVICES[service_name]
 
     def _get_client_args(self, service_name, endpoint_name, endpoint_bridge,
-                         is_secure, endpoint_url, access_token):
+                         is_secure, endpoint_url, access_token, credentials):
         args_creator = ClientArgsCreator(self._loader)
         return args_creator.get_client_args(
             service_name, endpoint_name, endpoint_bridge, is_secure,
-            endpoint_url, access_token)
+            endpoint_url, access_token, credentials)
 
 
 class ClientArgsCreator:
@@ -62,7 +63,7 @@ class ClientArgsCreator:
         self._loader = loader
 
     def get_client_args(self, service_name, endpoint_name, endpoint_bridge,
-                        is_secure, endpoint_url, access_token):
+                        is_secure, endpoint_url, access_token, credentials):
         """Obtains client args.
 
         Parameters
@@ -103,7 +104,8 @@ class ClientArgsCreator:
         return {
             'endpoint': endpoint,
             'loader': self._loader,
-            'access_token': access_token
+            'access_token': access_token,
+            'credentials': credentials
         }
 
     def _get_endpoint(self, endpoint_config):

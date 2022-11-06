@@ -5,6 +5,8 @@ from .configprovider import DEFAULT_SESSION_VARIABLES
 from .credentials import Credentials, create_credential_resolver
 from .endpoint import EndpointResolver
 from .loaders import create_loader
+from .tokens import FrozenAuthToken
+from .exceptions import PartialCredentialsError
 
 
 class Session:
@@ -49,9 +51,9 @@ class Session:
         self._register_endpoint_resolver()
 
     def set_access_token(self, access_token):
-        self._access_token = access_token
+        self._access_token = FrozenAuthToken(access_token)
 
-    def set_credentials(self, access_key, secret_key, token=None):
+    def set_credentials(self, access_key, secret_key):
         """Manually create credentials for this session.
 
         Parameters
@@ -61,15 +63,19 @@ class Session:
 
         secret_key : str
             The secret key part of the credentials.
-
-        token : str
-            An option session token used by STS session credentials.
         """
-        self._credentials = Credentials(access_key, secret_key, token)
+        self._credentials = Credentials(access_key, secret_key)
 
-    def create_client(self, service_name, endpoint_name=None,
-                      endpoint_url=None, access_token=None,
-                      is_secure=True):
+    def create_client(
+            self,
+            service_name,
+            endpoint_name=None,
+            endpoint_url=None,
+            access_token=None,
+            access_key=None,
+            secret_key=None,
+            is_secure=True
+    ):
         """Creates service client by name.
 
         Parameters
@@ -91,7 +97,7 @@ class Session:
         access_token : str, default=None
             The access token key to use when creating the client. This is
             entirely optional, and if not provided, the access token configured
-            for the session will automatically be used.  You only need to
+            for the session will automatically be used. You only need to
             provide this argument if you want to override the access token used
             for this specific client.
 
@@ -99,29 +105,30 @@ class Session:
             Whether or not to use SSL.  By default, SSL is used.
             Note that not all services support non-ssl connections.
         """
-        # if access_key_id is not None and secret_access_key is not None:
-        #    credentials = Credentials(
-        #        access_key=access_key_id,
-        #        secret_key=secret_access_key,
-        #        token=session_token)
-        # elif self._missing_cred_vars(access_key_id,
-        #                             secret_access_key):
-        #    raise PartialCredentialsError(
-        #        provider='explicit',
-        #        cred_var=self._missing_cred_vars(access_key_id,
-        #                                         secret_access_key))
-        # else:
-        #    credentials = self.get_credentials()
+        if access_key is not None and secret_key is not None:
+            credentials = Credentials(
+                access_key=access_key, secret_key=secret_key, token=None)
+        elif self._missing_cred_vars(access_key, secret_key):
+            raise PartialCredentialsError(
+                provider='explicit',
+                cred_var=self._missing_cred_vars(access_key, secret_key))
+        else:
+            credentials = self.get_credentials()
+
         if access_token is None:
             access_token = self.get_access_token()
 
         loader = self.get_component('data_loader')
         endpoint_resolver = self._get_internal_component('endpoint_resolver')
         client_creator = ClientCreator(loader, endpoint_resolver)
-        return client_creator.create_client(service_name, endpoint_name,
-                                            is_secure=is_secure,
-                                            endpoint_url=endpoint_url,
-                                            access_token=access_token)
+        return client_creator.create_client(
+            service_name=service_name,
+            endpoint_name=endpoint_name,
+            is_secure=is_secure,
+            endpoint_url=endpoint_url,
+            access_token=access_token,
+            credentials=credentials
+        )
 
     def get_component(self, name):
         return self._components.get_component(name)
@@ -134,9 +141,9 @@ class Session:
 
     def _missing_cred_vars(self, access_key, secret_key):
         if access_key is not None and secret_key is None:
-            return 'secret_access_key'
+            return 'secret_key'
         if secret_key is not None and access_key is None:
-            return 'access_key_id'
+            return 'access_key'
         return None
 
     def get_credentials(self):

@@ -2,13 +2,14 @@ from .base import BaseService
 
 
 class LoginService(BaseService):
-    def __init__(self, endpoint, loader, access_token):
-        super().__init__(endpoint, loader, access_token)
+    def __init__(self, endpoint, loader, access_token, credentials):
+        super().__init__(endpoint, loader, access_token, credentials)
 
-    def post(self, username, password):
+    def login(self):
+        credentials = self.get_credentials()
         api_params = {
-            'username': username,
-            'password': password,
+            'username': credentials.access_key,
+            'password': credentials.secret_key,
         }
 
         # Notice ``annon`` param is set to True.

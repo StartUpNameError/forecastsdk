@@ -1,8 +1,8 @@
-========================================
-Forecast Client - The Forecast API SDK for Python
-========================================
+==============================================
+Forecast SDK - The Forecast API SDK for Python
+==============================================
 
-Forecast Client is the Forecast API Software Development Kit for Python, which allows
+Forecast SDK is the Forecast API Software Development Kit for Python, which allows
 Python developers o write software that makes use of the Forecast API services.
 
 Getting Started
@@ -12,15 +12,15 @@ from source with:
 
 .. code-block:: sh
 
-    $ git clone https://github.com/ramonAV98/forecast_client.git
-    $ cd forecast_client
+    $ git clone https://github.com/ramonAV98/forecastsdk.git
+    $ cd forecastsdk
     $ python -m pip install -r requirements.txt
-    $ python -m pip install -e .
+    $ python -m pip install .
 
 
-Using Forecast Client
-~~~~~~~~~~~~~~~~~~~~~
-After installing forecast_client
+Using Forecast SDK
+~~~~~~~~~~~~~~~~~~
+After installing forecastsdk
 
 Next, set up credentials (in e.g. ``~/.aws/credentials``):
 

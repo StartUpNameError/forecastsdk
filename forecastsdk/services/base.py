@@ -1,5 +1,5 @@
 import http
-from abc import ABCMeta, abstractmethod
+from abc import ABCMeta
 
 
 class HTTPException(Exception):
@@ -15,17 +15,17 @@ class HTTPException(Exception):
 
 
 class BaseService(metaclass=ABCMeta):
-    def __init__(self, endpoint, loader, access_token):
+    def __init__(self, endpoint, loader, access_token=None, credentials=None):
         self._endpoint = endpoint
         self._loader = loader
         self._access_token = access_token
-
-    @abstractmethod
-    def post(self, *args, **kwargs):
-        pass
+        self._credentials = credentials
 
     def get_endpoint(self):
         return self._endpoint
+
+    def get_credentials(self):
+        return self._credentials
 
     def _make_api_call(self, json=None, data=None, annon=False):
         headers = self._create_headers(annon)
@@ -51,8 +51,4 @@ class BaseService(metaclass=ABCMeta):
         return {'accept': 'application/json', 'Authorization': auth_bearer}
 
     def _create_auth_bearer(self):
-        return 'Bearer ' + self._access_token
-
-    # def _convert_to_request_dict(self, api_params, annon):
-    # request_dict = self._serializer.serialize_to_request(api_params)
-    # return request_dict
+        return 'Bearer ' + self.access_token

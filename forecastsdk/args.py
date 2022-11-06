@@ -6,6 +6,31 @@ considered internal, and *not* a public API.
 from abc import abstractmethod, ABCMeta
 
 
+def make_cloud_args_creator(name, credentials, endpoint=None):
+    """Factory function for :class:`CloudArgsCreator` objects.
+
+    Parameters
+    ----------
+    name : str
+        Args creator name.
+
+    credentials : client.credentials.Credentials
+        Client credentials object.
+
+    endpoint : client.endpoint.Endpoint
+        Endpoint object.
+
+    Returns
+    -------
+    cloud_args_creator : CloudArgsCreator
+    """
+    args_creators = {
+        'minio': MinioArgsCreator,
+        'S3FileSystem': S3FilesystemArgsCreator
+    }
+    return args_creators[name](credentials, endpoint)
+
+
 class CloudArgsCreator(metaclass=ABCMeta):
     """Base abstract class for cloud args creator.
 
@@ -21,31 +46,6 @@ class CloudArgsCreator(metaclass=ABCMeta):
     @abstractmethod
     def create_args(self):
         pass
-
-    @classmethod
-    def make_args_creator(cls, name, credentials, endpoint=None):
-        """Factory function for :class:`CloudArgsCreator` objects.
-
-        Parameters
-        ----------
-        name : str
-            Args creator name.
-
-        credentials : client.credentials.Credentials
-            Client credentials object.
-
-        endpoint : client.endpoint.Endpoint
-            Endpoint object.
-
-        Returns
-        -------
-        cloud_args_creator : CloudArgsCreator
-        """
-        args_creators = {
-            'minio': MinioArgsCreator,
-            'S3FileSystem': S3FilesystemArgsCreator
-        }
-        return args_creators[name](credentials, endpoint)
 
     def _split_host(self):
         protocol, endpoint = self._endpoint.host.split('://')

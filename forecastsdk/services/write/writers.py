@@ -31,7 +31,7 @@ class JsonWriter:
     def __init__(self, data):
         self.data = data
 
-    def json(self, path, minio_client, bucket_name):
+    def write(self, path, minio_client, bucket_name):
         self._put_json(minio_client, path, bucket_name)
 
     def _put_json(self, minio_client, path, bucket_name):

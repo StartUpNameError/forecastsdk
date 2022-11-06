@@ -1,6 +1,5 @@
 from .exceptions import InvalidFeatureType
 from .features import FeatureLocator
-from .services.write import JsonWriter
 
 
 class SchemaCreator:
@@ -111,10 +110,6 @@ class Schema:
             k: [dict(f) for f in features_list]
             for k, features_list in self.features_data.items()
         }
-
-    @property
-    def write(self):
-        return JsonWriter(self.dict())
 
     def get_dtypes(self):
         names_to_dtype = {}

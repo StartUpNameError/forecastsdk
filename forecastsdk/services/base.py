@@ -51,4 +51,4 @@ class BaseService(metaclass=ABCMeta):
         return {'accept': 'application/json', 'Authorization': auth_bearer}
 
     def _create_auth_bearer(self):
-        return 'Bearer ' + self.access_token
+        return 'Bearer ' + self._access_token.token

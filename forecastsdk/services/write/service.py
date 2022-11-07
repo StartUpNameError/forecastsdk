@@ -63,7 +63,7 @@ class WriterService(BaseService):
         if schema is not None:
             path = self._create_schema_path(dataset_group_name, dataset_name)
             minio_client = self._create_minio_client()
-            JsonWriter(schema).write(path, minio_client, bucket_name)
+            JsonWriter(schema.dict()).write(path, minio_client, bucket_name)
 
     def _create_df_path(self, bucket_name, dataset_group_name, dataset_name,
                         format):
